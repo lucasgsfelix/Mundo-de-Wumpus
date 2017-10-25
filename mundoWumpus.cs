@@ -29,23 +29,24 @@ public class fase{
 		mapa.Insert(15, new Sala("33", false, false, false, false));
 	}
 
-	public void defineWumpus(ArrayList mapa){
+	public void defineWumpus(ref List<Sala> mapa){
 		Random rnd = new Random();
 		int defineSala = rnd.Next(0, 16);
 		mapa[defineSala].setWumpus(true);
 	}
-	public void defineOuro(ArrayList mapa){
+	public void defineOuro(ref List<Sala> mapa){
 		Random rnd = new Random();
 		int defineSala = rnd.Next(0, 16);
 		mapa[defineSala].setOuro(true);
 	}
-	public void definePoco(ArrayList mapa){ //definido randomicamente
+	public void definePoco(ref List<Sala> mapa){ //definido randomicamente
 	//função para definir o local dos poços e automaticamente já define onde estará a brisa
 		int i=0;
+		int defineSala = 0;
 		while(i<3){
 			Random rnd = new Random();
-			int defineSala = rnd.Next(0, 16);
-			if(mapa[defineSala].getOuro()!=true){ //pro ouro não começar no poço
+			defineSala = rnd.Next(0, 16);
+			if((mapa[defineSala].getOuro()!=true)&&(mapa[defineSala].getWumpus()!=true)){ //pro ouro não começar no poço
 				mapa[defineSala].setPoco(true);
 				i=i+1;
 			}
@@ -99,15 +100,69 @@ public class Sala{
 
 }
 public class jogador{
-	
-	public int[] posicaoAtual = {0,0};
+	public bool estado = true;
+	public int posicaoAtual = 0;
 	public bool flecha = true; //indica se eu ainda tenho a flecha ou se já gastei
 	public int pontuacao = 0;
-	public ArrayList mapaDescobertos = new ArrayList(); //define tudo que já foi descoberto pelo personagem
+	public List<Sala> salasDescobertas = new List<Sala>(); //define tudo que já foi descoberto pelo personagem
+	public int numAcoes = 0;
+	public bool ouro = false;
+	public int angulo;
 
-		
+	public void caminharNoMapa(){
+		while( (getOuro() == false) || (getEstado() == true)){
+			//enquanto eu não tiver o ouro, ou estiver vivo -- 
+			if( mapa[getPosicaoAtual()].getWumpus() == true ){ //fim do jogo
+				Console.Write("\nGame Over você morreu !\n");
+				break;
+			} 
+			else if( mapa[getPosicaoAtual()].getOuro() == true ){ //fim do jogo pego o ouro
+				Console.Write("\n Você conseguiu pegar o ouro ! Fim de jogo, sua pontuação foi de "+ getPontuacao() + '\n');
+				break;
+			}
+			else{ //verifico quais são as informações que eu tenho para tomar uma decisão
+
+			}
+
+		}
+	}
+
 	public void medidaDesempenho(int pontuacao){
-
+		if(getFlecha()==false){
+			this.pontuacao = pontuacao - 10;
+		}
+		if(getOuro()==true){
+			this.pontuacao = pontuacao + 1000;
+		}
+		if(getEstado()==false){
+			this.pontuacao = pontuacao - 1000;
+		}
+		int aux = contAcoes();
+		pontuacao = pontuacao + aux;
+	}
+	public int getAngulo(){
+		return angulo;
+	}
+	public void setAngulo(int angulo){
+		this.angulo = angulo;
+	}
+	public bool getOuro(){
+		return ouro;
+	}
+	public void setOuro(bool ouro){
+		this.ouro = ouro;
+	}
+	public int contAcoes(){
+		return this.numAcoes = this.numAcoes + 1;
+	}
+	public void setEstado(bool estado){ //vai ser o meu equivalente a mandar a flecha
+		this.estado = false;
+	}
+	public bool getEstado(){
+		return estado;
+	}
+	public bool getFlecha(){
+		return flecha;
 	}
 	public void setFlecha(bool flecha){ //vai ser o meu equivalente a mandar a flecha
 		this.flecha = false;
@@ -118,9 +173,8 @@ public class jogador{
 	public void setPontuacao(int pontuacao){
 		this.pontuacao = pontuacao;
 	}
-	public void setPosicaoAtual(int linha, int coluna, ref int posicaoAtual){
-		this.posicaoAtual[0] = linha;
-		this.posicaoAtual[1] = coluna;
+	public void setPosicaoAtual(int posicaoAtual){
+		this.posicaoAtual = posicaoAtual;
 	} 
 
 }
