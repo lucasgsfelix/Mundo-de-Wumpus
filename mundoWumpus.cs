@@ -32,7 +32,9 @@ public class fase{
 	public void defineWumpus(ref List<Sala> mapa){
 		Random rnd = new Random();
 		int defineSala = rnd.Next(0, 16);
-		mapa[defineSala].setWumpus(true);
+		mapa[defineSala].setWumpus(true); //coloquei o wumpus
+
+		//agora tenho que colocar o fedor
 	}
 	public void defineOuro(ref List<Sala> mapa){
 		Random rnd = new Random();
@@ -51,6 +53,7 @@ public class fase{
 				i=i+1;
 			}
 		}
+		//tenho que definir brisa
 	}
 }
 public class Sala{
@@ -59,6 +62,8 @@ public class Sala{
 	public bool ouro;
 	public bool wumpus;
 	public bool poco;
+	public bool fedor;
+	public bool brisa;
 
 	public Sala(string nomeSala, bool ouro, bool wumpus, bool poco, bool jogador){
 		this.nomeSala = nomeSala;
@@ -66,6 +71,18 @@ public class Sala{
 		this.wumpus = wumpus;
 		this.poco = poco;
 		this.jogador = jogador;
+	}
+	public bool getFedor(){
+		return fedor;
+	}
+	public void setFedor(bool fedor){
+		this.fedor = fedor;
+	}
+	public bool getBrisa(){
+		return fedor;
+	}
+	public void setBrisa(bool brisa){
+		this.brisa = brisa;
 	}
 	public bool getJogador(){
 		return jogador;
@@ -107,9 +124,12 @@ public class jogador{
 	public List<Sala> salasDescobertas = new List<Sala>(); //define tudo que já foi descoberto pelo personagem
 	public int numAcoes = 0;
 	public bool ouro = false;
-	public int angulo;
+	public int angulo = 0;
+	//public List<String> percepcoes = new List<String>();
 
 	public void caminharNoMapa(){
+		bool linha, coluna;
+		string nomeSalaAtual = Empty.String;
 		while( (getOuro() == false) || (getEstado() == true)){
 			//enquanto eu não tiver o ouro, ou estiver vivo -- 
 			if( mapa[getPosicaoAtual()].getWumpus() == true ){ //fim do jogo
@@ -122,8 +142,59 @@ public class jogador{
 			}
 			else{ //verifico quais são as informações que eu tenho para tomar uma decisão
 
+				salasDescobertas.add(mapa[getPosicaoAtual()]); //adiciono as informações descobertas na lista
+				//analisarei as informações -- só me movo se tiver certeza
+				linha = false;
+				coluna = false;
+				if( (mapa[getPosicaoAtual()].getBrisa() != true) && (mapa[getPosicaoAtual()].getFedor() != true) ){
+					//quer dizer que a frente não tenho perigo -- posso ir sem medo
+					nomeSalaAtual = mapa[getPosicaoAtual].getNome();
+					verificaAndar(nomeSalaAtual, ref linha, ref coluna);
+					anda(ref linha, ref coluna, ref nomeSalaAtual);
+
+				}
+
 			}
 
+		}
+	}
+	public void anda(ref linha, ref coluna, string nomeSalaAtual){
+		if( (linha==true) && (coluna==false) ){
+			//minha linha irá andar em mais um
+
+
+		}
+		else if( (linha==false) && (coluna==true) ){
+			//minha coluna irá andar mais um
+			if((getAngulo()==0)&&(Convert.ToInt32(nomeSalaAtual[1])==0)){
+				//ando na coluna
+
+			}
+			else if((getAngulo()==180)&&(Convert.ToInt32(nomeSalaAtual[1])==3)){
+				//ando na coluna
+
+			}
+			else{
+				
+			}
+
+
+		}
+		else{ //posso andar em qualquer um
+
+			//vou escolher a posição de acordo com o angulo que eu estou, 
+			//o que eu tiver que fazer a menor quantidade de movimentos
+			
+			else if((angulo==))
+
+		}
+	}
+	public void verificaAndar(string nomeSalaAtual,ref bool linha, ref bool coluna){
+		if((Convert.ToInt32(nomeSalaAtual[0])==0) || (Convert.ToInt32(nomeSalaAtual[0])==3)){//na linha/coluna, só posso andar pra frente
+			linha = true;
+		} 
+		if((Convert.ToInt32(nomeSalaAtual[1])==3)|| || (Convert.ToInt32(nomeSalaAtual[1])==0)){//na linha/coluna só posso andar para trás
+			coluna = true;
 		}
 	}
 
